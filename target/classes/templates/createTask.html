@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title th:text="#{tasks.pageTitle}">Task</title>
+    <object th:include="layouts :: commonHead" th:remove="tag"></object>
+    <link href="css/datepicker.css" th:href="@{/css/datepicker.css}" rel="stylesheet"></link>
+    <script src="js/bootstrap-datepicker.js" th:src="@{/js/bootstrap-datepicker.js}"></script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        	<object th:include="layouts :: navigation" th:remove="tag"></object>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Task</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Create Task
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <form role="form" th:method="post" th:action="@{/task/submitNewTask}" th:object="${taskModel}">
+                                    <!-- <div class="form-group">
+                                            <label>Text Input</label>
+                                            <input class="form-control">
+                                            <p class="help-block">Example block-level help text here.</p>
+                                        </div> -->    
+                                        <div class="form-group">
+                                            <label>Task Name</label>
+                                            <input th:field="*{taskName}" type="text" class="form-control" th:placeholder="#{tasks.label.taskName}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Assignee Name</label>
+                                            <input th:field="*{assigneeUsername}"   class="form-control" th:placeholder="#{tasks.label.assigneeName}"/>
+                                        </div>
+                                        <!-- INSERT DATE PICKER HERE  -->
+                                       	<div class="form-group">
+                                        <label>Due Date</label>
+                                        <input th:field="*{dueDate}" data-provide="datepicker-inline" th:class="datepicker"/>
+                                        </div>
+                                        <input type="submit" th:value="#{global.submit}" name="submit"  class="btn btn-lg btn-success btn-block" />
+                                    </form>
+                                </div>
+                                <!-- /.col-lg-6 (nested) -->
+                                
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+	<script th:inline="javascript">
+	$('.datepicker').datepicker({
+	    format: 'mm/dd/yyyy',
+	    startDate: '-3d'
+	})
+	</script>
+
+</body>
+
+</html>

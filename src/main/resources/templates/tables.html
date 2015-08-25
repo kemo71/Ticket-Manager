@@ -1,0 +1,112 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title th:text="#{approveUsers.title}">Ticket Manager</title>
+	<object th:include="layouts :: commonHead" th:remove="tag"></object>
+    
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <object th:include="layouts :: navigation" th:remove="tag"></object>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Tables</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            DataTables Advanced Tables
+                           
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="dataTable_wrapper">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                           
+                        </div>
+                        <button id="button" class="btn btn-success">Approve</button>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+   
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script th:inline="javascript">
+   
+    $(document).ready(function() {
+        var table= $('#dataTables-example').DataTable({
+        		"ajax" : 	{
+        						"url" : /*[[@{/admin/getPendingUsers}]]*/ '',
+        						"type" : "GET",
+        						"dataSrc" : ""
+        					},
+        		"columns" : [
+     		             		{"data" : "username", "title" : "Username"},
+    		             		{"data" : "email", "title" : "Email"}
+        		            ],
+                responsive: true
+        });
+        
+        $('#dataTables-example tbody').on( 'click', 'tr', function () {
+            $(this).toggleClass('selected');
+        } );
+     
+        $('#button').click( function () {
+        	console.log( table.rows('.selected').data().length +' row(s) selected' );
+        	console.log( table.rows('.selected').data()[0].username +' row(s) selected' );
+            var selected = table.rows('.selected').data();
+            var usernamesArr = [];
+           	selected.each(function(value, index) {
+            	usernamesArr.push(value.username);
+            	
+            });
+            var params = {
+            		/*[+[[${_csrf.parameterName}]]+]*/ : /*[[${_csrf.token}]]*/,
+            		'usernames[]' : usernamesArr
+            }
+            console.log(JSON.stringify(usernamesArr));
+            $.post(/*[[@{/admin/processUsers}]]*/ '', params)
+            .done(function(){
+            	//location.reload();
+            	table.row('.selected').remove().draw( false );
+            	//salert("Done!");
+            });
+            
+        } );
+    });
+    </script>
+
+</body>
+
+</html>
